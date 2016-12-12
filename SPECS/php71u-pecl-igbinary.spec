@@ -135,7 +135,7 @@ popd
 %install
 make install -C NTS INSTALL_ROOT=%{buildroot}
 
-install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{pecl_name}.xml
 
 install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 
@@ -211,7 +211,7 @@ fi
 %doc %{pecl_docdir}/%{pecl_name}
 %config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
-%{pecl_xmldir}/%{name}.xml
+%{pecl_xmldir}/%{pecl_name}.xml
 
 %if %{with_zts}
 %config(noreplace) %{php_ztsinidir}/%{ini_name}
@@ -233,6 +233,7 @@ fi
 - Port from Fedora to IUS
 - Build with pear1u (via "pecl" virtual provides)
 - Re-add scriptlets (file triggers not yet available in EL)
+- Install package.xml as %%{pecl_name}.xml, not %%{name}.xml
 
 * Mon Nov 21 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - update to 2.0.0
