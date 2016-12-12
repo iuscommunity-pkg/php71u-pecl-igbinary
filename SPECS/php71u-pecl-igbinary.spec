@@ -23,8 +23,8 @@ Group:          System Environment/Libraries
 
 URL:            http://pecl.php.net/package/%{pecl_name}
 
-BuildRequires:  php-pear
 BuildRequires:  %{php_base}-devel
+BuildRequires:  pecl >= 1.10.0
 BuildRequires:  %{php_base}-pecl-apcu-devel
 
 Requires:       php(zend-abi) = %{php_zend_api}
@@ -218,6 +218,7 @@ popd
 %changelog
 * Sun Dec 11 2016 Carl George <carl.george@rackspace.com> - 2.0.0-2.ius
 - Port from Fedora to IUS
+- Build with pear1u (via "pecl" virtual provides)
 
 * Mon Nov 21 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - update to 2.0.0
