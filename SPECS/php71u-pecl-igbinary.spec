@@ -30,6 +30,9 @@ BuildRequires:  %{php_base}-pecl-apcu-devel
 Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
 
+Requires(post): pecl >= 1.10.0
+Requires(postun): pecl >= 1.10.0
+
 # provide the stock name
 Provides:       php-pecl-%{pecl_name} = %{version}
 Provides:       php-pecl-%{pecl_name}%{?_isa} = %{version}
@@ -194,6 +197,16 @@ popd
 %endif
 
 
+%post
+%{pecl_install} %{pecl_xmldir}/%{pecl_name}.xml >/dev/null || :
+
+
+%postun
+if [ $1 -eq 0 ]; then
+    %{pecl_uninstall} %{pecl_name} >/dev/null || :
+fi
+
+
 %files
 %doc %{pecl_docdir}/%{pecl_name}
 %config(noreplace) %{php_inidir}/%{ini_name}
@@ -219,6 +232,7 @@ popd
 * Sun Dec 11 2016 Carl George <carl.george@rackspace.com> - 2.0.0-2.ius
 - Port from Fedora to IUS
 - Build with pear1u (via "pecl" virtual provides)
+- Re-add scriptlets (file triggers not yet available in EL)
 
 * Mon Nov 21 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - update to 2.0.0
