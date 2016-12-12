@@ -85,6 +85,8 @@ These are the files needed to compile programs using Igbinary
 %setup -q -c
 mv %{pecl_name}-%{version} NTS
 
+sed -e '/COPYING/s/role="doc"/role="src"/' -i package.xml
+
 pushd NTS
 
 # Check version
@@ -208,6 +210,7 @@ fi
 
 
 %files
+%license NTS/COPYING
 %doc %{pecl_docdir}/%{pecl_name}
 %config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
@@ -234,6 +237,7 @@ fi
 - Build with pear1u (via "pecl" virtual provides)
 - Re-add scriptlets (file triggers not yet available in EL)
 - Install package.xml as %%{pecl_name}.xml, not %%{name}.xml
+- Properly install license file
 
 * Mon Nov 21 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - update to 2.0.0
