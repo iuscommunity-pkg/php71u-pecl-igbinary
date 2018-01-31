@@ -17,21 +17,24 @@
 Summary:        Replacement for the standard PHP serializer
 Name:           %{php}-pecl-%{pecl_name}
 Version:        2.0.5
-Release:        1.ius%{?dist}
+Release:        2.ius%{?dist}
 Source0:        https://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 License:        BSD
 Group:          System Environment/Libraries
 URL:            https://pecl.php.net/package/%{pecl_name}
 
 BuildRequires:  %{php}-devel
-BuildRequires:  pecl >= 1.10.0
 BuildRequires:  %{php}-pecl-apcu-devel
+
+BuildRequires:  pear1u
+# explicitly require pear dependencies to avoid conflicts
+BuildRequires:  %{php}-cli
+BuildRequires:  %{php}-common
+BuildRequires:  %{php}-process
+BuildRequires:  %{php}-xml
 
 Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
-
-Requires(post): pecl >= 1.10.0
-Requires(postun): pecl >= 1.10.0
 
 # provide the stock name
 Provides:       php-pecl-%{pecl_name} = %{version}
@@ -190,12 +193,20 @@ popd
 %endif
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{pecl_name}.xml >/dev/null || :
+%triggerin -- pear1u
+if [ -x %{__pecl} ]; then
+    %{pecl_install} %{pecl_xmldir}/%{pecl_name}.xml >/dev/null || :
+fi
+
+
+%posttrans
+if [ -x %{__pecl} ]; then
+    %{pecl_install} %{pecl_xmldir}/%{pecl_name}.xml >/dev/null || :
+fi
 
 
 %postun
-if [ $1 -eq 0 ]; then
+if [ $1 -eq 0 -a -x %{__pecl} ]; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
 
@@ -223,6 +234,9 @@ fi
 
 
 %changelog
+* Wed Jan 31 2018 Carl George <carl@george.computer> - 2.0.5-2.ius
+- Remove pear requirement and update scriptlets (adapted from remirepo)
+
 * Mon Nov 06 2017 Ben Harper <ben.harper@rackspace.com> - 2.0.5-1.ius
 - Latest upstream
 
